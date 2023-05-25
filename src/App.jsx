@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Container from "./components/Container";
 import BarLayout from "./components/BarLayout";
 import { months } from "./data.js";
@@ -12,6 +12,22 @@ import FilterDropdown from "./components/FilterDropdown";
 const App = () => {
   const [expenseData, setExpenseData] = useState([]);
   const [selectedYear, setSelectedYear] = useState(null);
+
+  useEffect(() => {
+    localStorage.setItem("expenseData", JSON.stringify(expenseData));
+  }, [expenseData]);
+
+  useEffect(() => {
+    const storedExpenseData = localStorage.getItem("expenseData");
+    if (storedExpenseData) {
+      try {
+        const parsedData = JSON.parse(storedExpenseData);
+        setExpenseData(parsedData);
+      } catch (err) {
+        console.error(`Error parsing data from localStorage ${err.message}`);
+      }
+    }
+  }, []);
 
   return (
     <Container>
